@@ -33,7 +33,7 @@ Then, run these steps:
 ```console
 $ git clone https://github.com/djotanov/dotfiles.git ~/.dotfiles
 $ cd ~/.dotfiles
-$ sh ./install.sh
+$ sh ./initialPackages.sh
 $ ./script/bootstrap
 $ zsh # or just close and open your terminal again.
 ```
