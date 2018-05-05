@@ -1,37 +1,49 @@
-#!/bin/bash
-# USAGE: ./cloneFromGitlab.sh <group name> <private token> <gitlab url>
+#!/usr/bin/env bash
 
-if command -v jq >/dev/null 2>&1; then
-  echo "jq parser found";
-else
-  echo "this script requires the 'jq' json parser (https://stedolan.github.io/jq/).";
-  exit 1;
+PROJECT_PROJECTION="{ "path": .path_with_namespace, "git": .ssh_url_to_repo }"
+
+if [ -z "$GITLAB_PATH" ]; then
+    echo "Please set the environment variable GITLAB_PATH"
+    exit 1
 fi
 
-if [ -z "$1" ]
-  then
-    echo "a group name arg is required"
-    exit 1;
+if [ -z "$GITLAB_PRIVATE_TOKEN" ]; then
+    echo "Please set the environment variable GITLAB_PRIVATE_TOKEN"
+    exit 1
 fi
 
-if [ -z "$2" ]
-  then
-    echo "an auth token arg is required. See $3/profile/account"
-    exit 1;
-fi
+FILENAME="repos.json"
 
-if [ -z "$3" ]
-  then
-    echo "a gitlab URL is required."
-    exit 1;
-fi
+# clean up any old files since we'll now be appending to the file
+[ -e $FILENAME  ] && rm $FILENAME
 
-TOKEN="$2";
-URL="$3/api/v3"
-PREFIX="ssh_url_to_repo";
+PAGE_COUNTER=1
+while true; do
+    echo "Reading page $PAGE_COUNTER"
 
-echo "Cloning all git projects in group $1";
+    CURL_OUT=$(curl -s -k "${GITLAB_PATH}/api/v4/projects?private_token=$GITLAB_PRIVATE_TOKEN&per_page=999&page=$PAGE_COUNTER")
+    if [ "$CURL_OUT" == "[]" ]; then break; fi
 
-GROUP_ID=$(curl --header "PRIVATE-TOKEN: $TOKEN" $URL/groups?search=$1 | jq '.[].id')
-echo "group id was $GROUP_ID";
-curl --header "PRIVATE-TOKEN: $TOKEN" $URL/groups/$GROUP_ID/projects?per_page=100 | jq --arg p "$PREFIX" '.[] | .[$p]' | xargs -L1 git clone
+
+    echo $CURL_OUT | jq --raw-output --compact-output ".[] | $PROJECT_PROJECTION" >> "$FILENAME"
+    let PAGE_COUNTER++
+done
+
+CURR_DIR=$(pwd)
+while read repo; do
+    THEPATH=$(echo "$repo" | jq -r ".path")
+    GIT=$(echo "$repo" | jq -r ".git")
+    if [ ! -d "$THEPATH" ]; then
+        echo "Cloning $THEPATH ( $GIT )"
+        mkdir -p "$THEPATH"
+        cd "$THEPATH"
+        cd ..
+        git clone "$GIT" --quiet &
+        cd "$CURR_DIR"
+    else
+        echo "Pulling $THEPATH"
+        cd "$THEPATH"
+        git pull --quiet &
+        cd "$CURR_DIR"
+    fi
+done < "$FILENAME"
