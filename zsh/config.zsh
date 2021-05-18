@@ -73,3 +73,5 @@ key[Shift-Tab]="${terminfo[kcbt]}"
 [[ -n "${key[PageUp]}"    ]] && bindkey -- "${key[PageUp]}"     beginning-of-buffer-or-history
 [[ -n "${key[PageDown]}"  ]] && bindkey -- "${key[PageDown]}"   end-of-buffer-or-history
 [[ -n "${key[Shift-Tab]}" ]] && bindkey -- "${key[Shift-Tab]}"  reverse-menu-complete
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
