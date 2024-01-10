@@ -3,16 +3,17 @@ plug "esc/conda-zsh-completion"
 plug "zsh-users/zsh-autosuggestions"
 plug "zap-zsh/supercharge"
 plug "zap-zsh/fzf"
-plug "zap-zsh/exa"
 plug "zsh-users/zsh-syntax-highlighting"
 plug "zsh-users/zsh-history-substring-search"
 
 # starship prompt
 eval "$(starship init zsh)"
 
-# ASDF settup
-. "$HOME/.asdf/asdf.sh"
-fpath=(${ASDF_DIR}/completions $fpath)
+# Homebrew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# Mise setup
+eval "$(~/.local/bin/mise activate zsh)"
 
 autoload -Uz compinit && compinit
 
@@ -40,4 +41,5 @@ alias gp='git push'
 alias gco='git checkout'
 alias gcm='git commit -m'
 alias c='cd ~/code'
+alias vim='nvim'
 
