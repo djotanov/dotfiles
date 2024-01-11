@@ -29,11 +29,13 @@ export EDITOR=vim
 export PATH="$HOME/.local/bin":$PATH
 
 if command -v batcat &> /dev/null; then
-  alias cat="batcat -pp --theme \"Visual Studio Dark+\"" 
-  alias catt="batcat --theme \"Visual Studio Dark+\"" 
+  alias cat="batcat --theme \"Catppuccin\"" 
+fi
+if command -v bat &> /dev/null; then
+  alias cat="bat --theme \"Catppuccin\"" 
 fi
 
-alias gs='git status'
+alias gs='git status -sb'
 alias gd='git diff | bat'
 alias glg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
 alias gl='git pull'
@@ -42,4 +44,9 @@ alias gco='git checkout'
 alias gcm='git commit -m'
 alias c='cd ~/code'
 alias vim='nvim'
+alias  l='eza -lh  --icons=auto' # long list
+alias la='eza -la  --icons=auto --sort=name --group-directories-first'
+alias ls='eza -1   --icons=auto' # short list
+alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
+alias ld='eza -lhD --icons=auto' # long list dirs
 
