@@ -25,6 +25,8 @@ bindkey '^[[H'  beginning-of-line
 bindkey '^[[F'  end-of-line
 bindkey '^[[3~' delete-char
 
+eval "$(zoxide init zsh)"
+
 export EDITOR=vim
 export PATH="$HOME/.local/bin":$PATH
 
@@ -42,11 +44,15 @@ alias gl='git pull'
 alias gp='git push'
 alias gco='git checkout'
 alias gcm='git commit -m'
+alias gd='git diff'
 alias c='cd ~/code'
 alias vim='nvim'
+
 alias  l='eza -lh  --icons=auto' # long list
 alias la='eza -la  --icons=auto --sort=name --group-directories-first'
 alias ls='eza -1   --icons=auto' # short list
 alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
 alias ld='eza -lhD --icons=auto' # long list dirs
 
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
