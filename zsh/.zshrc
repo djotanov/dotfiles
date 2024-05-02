@@ -1,3 +1,4 @@
+# ZAP and plugins
 [ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
 plug "esc/conda-zsh-completion"
 plug "zsh-users/zsh-autosuggestions"
@@ -12,6 +13,9 @@ eval "$(starship init zsh)"
 # Homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
+# Zoxide
+eval "$(zoxide init zsh)"
+
 # Mise setup
 eval "$(~/.local/bin/mise activate zsh)"
 
@@ -24,8 +28,6 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey '^[[H'  beginning-of-line
 bindkey '^[[F'  end-of-line
 bindkey '^[[3~' delete-char
-
-eval "$(zoxide init zsh)"
 
 export EDITOR=vim
 export PATH="$HOME/.local/bin":$PATH
@@ -54,5 +56,3 @@ alias ls='eza -1   --icons=auto' # short list
 alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
 alias ld='eza -lhD --icons=auto' # long list dirs
 
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
